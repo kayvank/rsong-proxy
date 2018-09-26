@@ -25,13 +25,12 @@ object RSongUserCache {
   implicit val rsongUserCache: Cache[CachedRSongUser] =
     RedisCache(redisUrl, redisPort)
 
-  def getOrCreateUser: String => RholangProxy => Either[Err,CachedRSongUser] =
-    name => proxy => {
+  def getOrCreateUser: String => Either[Err,CachedRSongUser] =
+    name =>  {
       get(name) match {
         case Success(Some(user)) =>
           Right(user)
         case Success(None) =>
-//          val _=Future { newUser(name)(proxy)}  //TODO micro batch will have to do this
           log.info(s"user: $name is not in cache. Creating user: $name")
           put(name)(CachedRSongUser(name, PlayCount(initialPlayCount)) )
           Right(CachedRSongUser(name, PlayCount(initialPlayCount)) )
