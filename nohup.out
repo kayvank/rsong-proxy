@@ -1,0 +1,42 @@
+11:17:50.985 [main] INFO  c.r.n.configuration.Configuration$ - Using configuration file: /home/kayvan/.rnode/rnode.toml
+11:17:51.199 [main] WARN  c.r.n.configuration.Configuration$ - Configuration file /home/kayvan/.rnode/rnode.toml not found
+11:17:51.248 [main] INFO  c.r.n.configuration.Configuration$ - Starting with profile default
+INFO - trying to open ports using UPnP....
+INFO - No gateway devices found
+INFO - No need to open any port
+11:18:00.677 [node-io-10] INFO  c.r.node.configuration.Configuration - flag --host was not provided, guessing your external IP address
+11:18:00.894 [node-io-10] INFO  c.r.node.configuration.Configuration - guessed 52.119.115.171 from source: AmazonAWS service
+Using data_dir: /home/kayvan/.rnode
+11:18:02.513 [node-io-10] INFO  coop.rchain.casper.genesis.Genesis$ - Found default file /home/kayvan/.rnode/genesis/bonds.txt.
+11:18:02.517 [node-io-10] INFO  coop.rchain.casper.genesis.Genesis$ - Found default file /home/kayvan/.rnode/genesis/wallets.txt.
+11:18:02.525 [node-io-10] WARN  coop.rchain.casper.genesis.Genesis$ - Error in parsing wallets file: Invalid pre-wallet specification:
+ed25519 73c77be894184cfe9e89d896515ee466e2d61fe446e59acb3118df6f3d8843bf 5
+11:18:02.525 [node-io-10] WARN  coop.rchain.casper.genesis.Genesis$ - Error in parsing wallets file: Invalid pre-wallet specification:
+ed25519 12fa0b06bf84e31ad460ae9ce27a57fa9c36201c0502ab7f783da73feb4e89c2 3
+11:18:02.525 [node-io-10] WARN  coop.rchain.casper.genesis.Genesis$ - Error in parsing wallets file: Invalid pre-wallet specification:
+ed25519 9da5e81f838236ebe964117725875ff6d988589eb5902148a52d3a6387b0ba84 2
+11:18:02.525 [node-io-10] WARN  coop.rchain.casper.genesis.Genesis$ - Error in parsing wallets file: Invalid pre-wallet specification:
+ed25519 82d1fabfd921c7d4fc9aa55946891135d3b578ef08d07c9f5cab335a94cb21de 4
+11:18:02.525 [node-io-10] WARN  coop.rchain.casper.genesis.Genesis$ - Error in parsing wallets file: Invalid pre-wallet specification:
+ed25519 46eb21d395d390bdc650106b37b6954d7b5ceab6626e4bb1f47d3ca8c249adf7 1
+11:18:04.581 [node-io-42] INFO  c.r.c.u.c.ApproveBlockProtocol$ApproveBlockProtocolImpl - APPROVAL: Beginning send of UnapprovedBlock 911dcd3c2c... to peers...
+11:18:04.705 [node-io-67] INFO  c.r.c.u.c.ApproveBlockProtocol$ApproveBlockProtocolImpl - APPROVAL: Sent UnapprovedBlock 911dcd3c2c... to peers.
+11:18:04.725 [node-io-67] INFO  c.r.c.u.c.ApproveBlockProtocol$ApproveBlockProtocolImpl - APPROVAL: Beginning send of ApprovedBlock 911dcd3c2c... to peers...
+11:18:04.728 [node-io-68] INFO  c.r.c.u.c.ApproveBlockProtocol$ApproveBlockProtocolImpl - APPROVAL: Sent ApprovedBlock 911dcd3c2c... to peers.
+11:18:04.748 [node-io-10] INFO  coop.rchain.node.NodeRuntime - RChain Node 0.6.4 (ae42cceb5ec4a3f87467ba38e317052eefca407b)
+11:18:04.749 [node-io-10] INFO  coop.rchain.node.NodeRuntime - Starting stand-alone node.
+11:18:04.838 [node-io-10] INFO  o.h.b.c.nio1.NIO1SocketServerGroup - Service bound to address /0:0:0:0:0:0:0:0:40403
+11:18:04.842 [node-io-10] INFO  org.http4s.server.blaze.BlazeBuilder - 
+  _   _   _        _ _     
+ | |_| |_| |_ _ __| | | ___
+ | ' \  _|  _| '_ \_  _(_-<
+ |_||_\__|\__| .__/ |_|/__/
+             |_|
+11:18:04.881 [node-io-10] INFO  org.http4s.server.blaze.BlazeBuilder - http4s v0.19.0-M2 on blaze v0.14.0-M4 started at http://[0:0:0:0:0:0:0:0]:40403/
+11:18:05.046 [node-io-10] WARN  kamon.zipkin.ZipkinReporter - For full Zipkin compatibility enable `kamon.trace.join-remote-parents-with-same-span-id` to preserve span id across client/server sides of a Span.
+11:18:05.048 [kamon.zipkin.ZipkinReporter] INFO  kamon.zipkin.ZipkinReporter - Started the Zipkin reporter.
+11:18:05.114 [node-io-10] INFO  coop.rchain.node.api.GrpcServer$ - gRPC server started, listening on 
+11:18:05.337 [node-io-10] INFO  coop.rchain.node.NodeRuntime - Listening for traffic on rnode://9958b33a8b05bebb64b2f5ed82563e2326306f7f@52.119.115.171?protocol=40400&discovery=40404.
+11:18:10.750 [node-io-42] INFO  c.r.c.util.comm.CasperPacketHandler$ - Making a transition to ApprovedBlockRecievedHandler state.
+11:26:05.177 [grpc-default-executor-0] INFO  c.r.casper.MultiParentCasperImpl - Received Deploy #1538504764759 -- new x0, x1, x2, x3, x4 in...
+./scripts/startValidator.sh: line 9: 17924 Killed                  rnode run -s --required-sigs 0 --map_size 2048576000 --thread-pool-size 70 --validator-private-key b081323f1de029986252e28bd2c5f5dd2309551851d2cc5209b2d1025d6472f4
