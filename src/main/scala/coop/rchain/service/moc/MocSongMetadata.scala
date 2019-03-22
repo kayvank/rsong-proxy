@@ -129,8 +129,8 @@ object MocSongMetadata {
     MocSongMetadata.mocSongs.get(songId) match {
       case Some(m) => Right(m)
       case None => Left(Err(
-        ErrorCode.nameNotFound,
-        s"No metadata for songId: $songId found!", Some(songId)))
+        OpCode.nameNotFound,
+        s"No metadata for songId: $songId found!"))
     }
   }
 }

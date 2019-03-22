@@ -71,15 +71,15 @@ class SongApi[F[_] : Sync] extends Http4sDsl[F] {
 
   private def computeHttpErr(e: Err, name: String, route: String) = {
     e.code match {
-      case ErrorCode.nameToPar =>
+      case OpCode.nameToPar =>
         log.error(s"${e} name: ${name}, route: $route")
         Kamon.counter(s"404 - ${route}")
         NotFound(name)
-      case ErrorCode.nameNotFound =>
+      case OpCode.nameNotFound =>
         log.error(s"${e} name: ${name} , route: $route")
         Kamon.counter(s"404 - ${route}")
         NotFound(name)
-      case ErrorCode.unregisteredUser =>
+      case OpCode.unregisteredUser =>
         log.error(s"${e} name: ${name} , route: $route")
         Kamon.counter(s"404 - ${route}")
         NotFound(name)

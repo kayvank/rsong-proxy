@@ -36,7 +36,7 @@ object RSongUserCache {
           put(name)(CachedRSongUser(name, PlayCount(initialPlayCount)) )
           Right(CachedRSongUser(name, PlayCount(initialPlayCount)) )
         case Failure(e) =>
-          Left(Err(ErrorCode.cacheLayer,e.getMessage,Some(name)))
+          Left(Err(OpCode.cacheLayer,e.getMessage))
       }
     }
 
@@ -45,8 +45,8 @@ object RSongUserCache {
       x <- get(userId).asErr
       z <- x match {
         case Some(CachedRSongUser(_, playCount,_,_)) => Right(playCount)
-        case None => Left(Err(ErrorCode.unregisteredUser,
-          s"user $userId is not registered", Some(userId)))
+        case None => Left(Err(OpCode.unregisteredUser,
+          s"user $userId is not registered"))
       }
     } yield (z)
   }
@@ -62,7 +62,8 @@ object RSongUserCache {
   def decPlayCount(songId: String, userId: String) = {
     get(userId).asErr match {
       case Right(None) =>
-        Left(Err(ErrorCode.unregisteredUser, "Attempting to decrement playcount for unregeistered user!", Some(userId)))
+        Left(Err(OpCode.unregisteredUser,
+          s"Attempted to decrement playcount for unregeistered user with id=$userId!"))
       case Right(Some(u)) =>
          Right(updateCache(u.copy(
            playCount = PlayCount(u.playCount.current-1)

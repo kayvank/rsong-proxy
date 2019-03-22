@@ -1,6 +1,6 @@
 package coop.rchain.utils
 
-import coop.rchain.domain.{CachingException, Err, ErrorCode}
+import coop.rchain.domain.{CachingException, Err, OpCode}
 import scala.util.{Either, Failure, Left, Right, Success, Try}
 
 object ErrImplicits {
@@ -9,7 +9,7 @@ object ErrImplicits {
       t match {
         case Success(s) => Right(s)
         case Failure(e) =>
-          Left(Err(ErrorCode.cacheLayer, e.getMessage, t.toOption.map(_.toString)))
+          Left(Err(OpCode.cacheLayer, e.getMessage))
       }
     }
   }

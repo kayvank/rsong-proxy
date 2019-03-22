@@ -5,7 +5,7 @@ import java.io.StringReader
 import cats.Monoid
 import com.typesafe.scalalogging.Logger
 import coop.rchain.casper.protocol.ListeningNameDataResponse
-import coop.rchain.domain.{Err, ErrorCode}
+import coop.rchain.domain.{Err, OpCode}
 import coop.rchain.models.Expr.ExprInstance.GString
 import coop.rchain.models.{Expr, Par}
 //import coop.rchain.models.RhoTypes.{Expr, Par}
@@ -121,7 +121,7 @@ object ParOps {
             case Failure(e)  =>
               println(e)
               log.error(s"String2Par failed with Exception: ${e}")
-              Left(Err(ErrorCode.nameToPar, e.getMessage, None))
+              Left(Err(OpCode.nameToPar, e.getMessage))
             case Success(r) =>
               Right(r)
           }

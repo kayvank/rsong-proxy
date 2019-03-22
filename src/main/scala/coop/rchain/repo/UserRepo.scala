@@ -17,7 +17,7 @@ object UserRepo {
     Try(s.toInt) match {
       case Success(i) => Right(i)
       case Failure(e) =>
-        Left(Err(ErrorCode.playCountConversion, e.getMessage, None))
+        Left(Err(OpCode.playCountConversion, e.getMessage))
     }
   }
 

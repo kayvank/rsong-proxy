@@ -1,7 +1,7 @@
 package coop.rchain.domain
 
-object ErrorCode extends Enumeration {
-  type ErrorCode = Value
+object OpCode extends Enumeration {
+  type OpCode = Value
   val grpcEval,
   grpcDeploy,
   grpcPropose,
@@ -17,10 +17,10 @@ object ErrorCode extends Enumeration {
   emptyVectorReturned,
   unregisteredUser,
   cacheLayer,
+  listenAtName,
   unknown = Value
 }
 
-import ErrorCode._
+import OpCode._
 
-case class Err(code: ErrorCode, msg: String, contract: Option[String])
-
+case class Err(code: OpCode, msg: String)
