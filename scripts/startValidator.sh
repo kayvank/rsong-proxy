@@ -4,9 +4,8 @@
 ## usage ./startValidator.sh 
 ##
 
-rm -rf ~/.rnode/rspace  && \
-    rm -f ~/.rnode/rnode.log && \
-    rnode run -s \
+rm -rf ~/.rnode/rspace ~/.rnode/blockstore ~/.rnode/dagstorage ~/.rnode/tmp
+rnode run -s \
       --required-sigs 0 \
       --thread-pool-size 5  \
       --validator-private-key \

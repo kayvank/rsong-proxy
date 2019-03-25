@@ -6,20 +6,21 @@ import org.specs2.Specification
 class RholangProxySpec extends  Specification {
   def is = s2"""
       repo specs
-          fetch by name $e1
+          listen to name $e1
+          fetch by asset by name $e2
     """
-  def e0 = {
-    val computed = Repo.proxy.showBlocks
-
-    println(s"==== blocks are = ${computed}")
-    computed.isEmpty === false
-  }
 
   def e1 = {
-    val name="Broke.jpg"
-    val computed = Repo.findByName(name)
+    val computed = Repo.findByName("Broke.jpg")
     println(s"==== broke.jpg = ${computed}")
-    computed.isRight === true
-    computed.right.get.length > 100
+    (computed.isRight == true &&
+      ! computed.right.get.isEmpty ) === true
+  }
+
+  def e2 = {
+    val computed = SongRepo.getRSongAsset("Broke.jpg")
+
+    println(s"==== blocks are = ${computed}")
+    computed.toOption.isDefined === true
   }
 }

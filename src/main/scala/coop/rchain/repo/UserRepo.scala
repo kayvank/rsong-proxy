@@ -3,7 +3,6 @@ package coop.rchain.repo
 import com.typesafe.scalalogging.Logger
 import coop.rchain.domain._
 import scala.util._
-import coop.rchain.repo.Repo._
 
 object UserRepo {
   import Repo._

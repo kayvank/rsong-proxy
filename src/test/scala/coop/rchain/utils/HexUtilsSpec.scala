@@ -11,8 +11,9 @@ class HexUtilsSpec extends Specification {
   import HexUtil._
 
   def e1 = {
-    val data = "48-65-6c-6c-6f-20-57-6f-72-6c-64-21-21"
-    bytes2hex(hex2bytes(data), Option("-")) === data
+    val data = "0123456789ABCDEF"
+    println(s" ++++++++ ${hex2bytes(data)} __________ ")
+    bytes2hex(hex2bytes(data).toOption.get, Option("-")) === "01-23-45-67-89-ab-cd-ef"
   }
 
 }

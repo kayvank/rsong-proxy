@@ -22,11 +22,11 @@ new bobIdOut, myJamIdOut, testLog(`rho:io:stderr`) in {
         "pubKey": "155d6fbdc9d0520575012f9a03a90c41f0736be9a4fcfe4d5e5b5574faee365a".hexToBytes()
       }
     ]
-  }, *myJamIdOut) |
+  }, "myJamIdOut") |
 
   @["Immersion", "newUserId"]!(*bobIdOut) |
 
-  for (@bobId <- bobIdOut; @myJamId <- myJamIdOut) {
+  for (@bobId <- bobIdOut; @myJamId <- @"myJamIdOut") {
     testLog!(["bob", bobId]) |
     new countOut in {
       @["Immersion", "playCount"]!(bobId, *countOut) |
@@ -34,21 +34,24 @@ new bobIdOut, myJamIdOut, testLog(`rho:io:stderr`) in {
         testLog!(["count", count])
       }
     } |
-    new permittedOut in {
-      @["Immersion", "play"]!(myJamId, bobId, *permittedOut) |
-      for (@permitted <- permittedOut) {
+      @["Immersion", "play"]!(myJamId, bobId, "permittedOut") |
+      for (@permitted <- @"permittedOut") {
         testLog!(["permitted A?", permitted])
       }
       |
-      @["Immersion", "play"]!(myJamId, bobId, *permittedOut) |
-      for (@permitted <- permittedOut) {
+      @["Immersion", "play"]!(myJamId, bobId, "permittedOut") |
+      for (@permitted <- @"permittedOut") {
         testLog!(["permitted B?", permitted])
       }
       |
-      @["Immersion", "play"]!(myJamId, bobId, *permittedOut) |
-      for (@permitted <- permittedOut) {
+      @["Immersion", "play"]!(myJamId, bobId, "permittedOut") |
+      for (@permitted <- @"permittedOut") {
         testLog!(["permitted C?", permitted])
       }
+    |
+    @["Immersion", "retrieveSong"] ! (myJamId, "songIdOut") |
+    for (@songIdOut <- @"songIdOut" ) {
+      testLog ! (["fetch song --> ", songIdOut])
     }
   }
 }

@@ -8,6 +8,10 @@ import io.grpc.{ManagedChannel, ManagedChannelBuilder}
 import coop.rchain.domain._
 import com.typesafe.scalalogging.Logger
 import coop.rchain.domain.OpCode.OpCode
+import coop.rchain.either.{Either => CE}
+import coop.rchain.protocol.ParUtil._
+import coop.rchain.models.either.EitherHelper._
+import coop.rchain.rholang.interpreter.{Interpreter, PrettyPrinter}
 
 import scala.util._
 
@@ -81,26 +85,24 @@ import RholangProxy._
 
   def proposeBlock: Either[Err, String] = grpc.createBlock(Empty()).asEither(OpCode.grpcDeploy)
 
+  def dataAtName(name: String): Either[Err, String] = {
+    name.asPar.flatMap( par =>{
+      log.info(s"dataAtName received par ${par}")
+      val res: CE = grpc.listenForDataAtName(DataAtNameQuery(Int.MaxValue, Some(par)))
+      toEither[ListeningNameDataResponse](res) match {
+        case e if e.isRight =>
+           val r =  for {
+              x <-  e.right.get.blockResults
+              y <- x.postBlockData
+              z = PrettyPrinter().buildString(y)
+            } yield(z)
+          r.headOption match {
+            case Some(s) => Right(s)
+            case None => Left(Err(OpCode.nameNotFound, s"$name was not found"))
+          }
 
-  import coop.rchain.protocol.ParOps._
-  def dataAtName(
-      rholangName: String): Either[Err, String] = {
-    log.info(s"dataAtName received name $rholangName")
-    rholangName.asPar.flatMap(p => dataAtName(p))
-  }
-
-  private def dataAtName(par: Par): Either[Err, String] = {
-    log.info(s"dataAtName received par ${par}")
-    val res =
-      grpc.listenForDataAtName(DataAtNameQuery(Int.MaxValue, Some(par))) //.asEither(OpCode.listenAtNam
-    val ret =
-    res.content match {
-      case (s) if s.isError => Left(Err(OpCode.listenAtName, s.error.get.messages.toString))
-      case (s) if  s.isEmpty => Left(Err(OpCode.listenAtName, "listenAtName returned no results!"))
-      case (s) if  s.isSuccess => Right( s.success.map( x => x.toProtoString).getOrElse("") )
-    }
-    log.info(s"++ dataAtName results are : ${ret}")
-    ret
-  }
+        case e if e.isLeft => Left( Err(OpCode.listenAtName, e.left.get.toString) )
+      }
+  })}
 
 }

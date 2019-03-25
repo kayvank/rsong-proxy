@@ -20,38 +20,13 @@ object Repo {
               ----------------------------------------------------
   """)
 
-  implicit class ParsToString(pars: Seq[Par]) {
-    def stringify() = {
-      val e = //pars.map(p => p.exprs.flatMap(_.getGString))
-        for {
-          p <- pars
-          e <- p.exprs
-        } yield (e.getGString)
-
-      if (e.isEmpty)
-        Left(Err(OpCode.nameNotFound, s"Rholang name not found${}"))
-      else Right(e.head)
-    }
-  }
-
  def deployAndPropose(queryTerm:String):Either[Err, DeployAndProposeResponse] =
    proxy.deployAndPropose(queryTerm)
 
   def findByName( name: String): Either[Err, String] =  findByName(proxy, name)
 
   private  def findByName(proxy: RholangProxy, name: String): Either[Err, String] =
-    proxy.dataAtName(name)
+    proxy.dataAtName( s""""$name"""")
 
-  private def stringify: Seq[Par] => Either[Err, String] =
-    pars => {
-      val e: Seq[String] =
-        for {
-          p <- pars
-          e <- p.exprs
-        } yield (e.getGString)
-      if (e.isEmpty)
-        Left(Err(OpCode.nameNotFound, s"Rholang name not found"))
-      else
-        Right(e.head)
-    }
+
 }

@@ -1,0 +1,11 @@
+new testLog(`rho:io:stderr`) in {
+  for (@myJamId <- @"Broke.jpg") {
+    @["Immersion", "retrieveSong"] ! (
+    "3a220a20e36a32e032d60f35b49816ea478030bf3e2edc109471e9f4a045f8d01f6e2e52".hexToBytes(),
+    "3a220a20e36a32e032d60f35b49816ea478030bf3e2edc109471e9f4a045f8d01f6e2e52-SONG-OUT") |
+    for (@songIdOut <-
+    @"3a220a20e36a32e032d60f35b49816ea478030bf3e2edc109471e9f4a045f8d01f6e2e52-SONG-OUT" ) {
+      testLog ! (["fetch song --> ", songIdOut])
+    }
+  }
+}

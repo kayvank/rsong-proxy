@@ -1,0 +1,8 @@
+new testLog(`rho:io:stderr`) in {
+  for (@myJamId <- @"Broke.jpg") {
+    @["Immersion", "retrieveSong"] ! (myJamId, "songIdOut") |
+    for (@songIdOut <- @"songIdOut" ) {
+      testLog ! (["fetch song --> ", songIdOut])
+    }
+  }
+}
