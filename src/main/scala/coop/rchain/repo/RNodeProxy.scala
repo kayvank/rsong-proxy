@@ -77,7 +77,7 @@ import RNodeProxy._
       contract: String): Either[Err, DeployAndProposeResponse] = {
     for {
       d <- deploy(contract)
-      _ = log.debug(s"Proposing contract $contract")
+      _ = log.info(s"Proposing contract $contract")
       p <- proposeBlock
     } yield DeployAndProposeResponse(d, p)
   }

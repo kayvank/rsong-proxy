@@ -23,10 +23,9 @@ object ServerStream {
   import coop.rchain.api.middleware.MiddleWear._
 
   val proxy: RNodeProxy = RNodeProxy(Server(Globals.rnodeHost, Globals.rnodePort))
-  val repo: Repo = Repo(proxy)
   val redisServer: Server = Server(Globals.redisHost, Globals.redisPort)
-  val cachedSongRepo: AssetCache = AssetCache(redisServer, SongRepo(repo))
-  val cachedUserRepo: UserCache = UserCache(redisServer, UserRepo(repo))
+  val cachedSongRepo: AssetCache = AssetCache(redisServer, AssetRepo(proxy))
+  val cachedUserRepo: UserCache = UserCache(redisServer, UserRepo(proxy))
 
   def statusApi[F[_]: Effect] = new Status[F].routes
   def userApi[F[_]: Effect] = new UserApi[F](cachedUserRepo).routes

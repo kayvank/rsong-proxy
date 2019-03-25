@@ -17,7 +17,7 @@ trait AssetCache {
 object AssetCache {
   val log = Logger[AssetCache.type]
 
-  def apply(redisServer: Server, repo: SongRepo) =
+  def apply(redisServer: Server, repo: AssetRepo) =
     new AssetCache {
       val binaryAsset: String => Either[Err, Array[Byte]] = name =>
         repo.getAsset(name)

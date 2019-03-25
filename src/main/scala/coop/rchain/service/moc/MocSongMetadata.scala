@@ -1,6 +1,6 @@
 package coop.rchain.service.moc
 import coop.rchain.domain._
-import coop.rchain.repo.SongRepo
+import coop.rchain.repo.AssetRepo
 
 import scala.util.{Left, Right}
 

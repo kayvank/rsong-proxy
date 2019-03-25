@@ -7,6 +7,7 @@ import org.specs2.Specification
 class RNodeProxySpec extends  Specification {
   def is = s2"""
       repo specs
+          listen-for-name $e1
           fetch by asset by name $e2
     """
 
@@ -14,7 +15,7 @@ class RNodeProxySpec extends  Specification {
   val repo: Repo = Repo(proxy)
 
   def e1 = {
-    val computed = repo.findByName("Broke.jpg")
+    val computed = proxy.dataAtName(""""Broke.jpg"""")
 
     println(s"==== broke.jpg = ${computed}")
     (computed.isRight == true &&
@@ -22,7 +23,7 @@ class RNodeProxySpec extends  Specification {
   }
 
   def e2 = {
-    val computed = SongRepo(repo).getAsset("Broke.jpg")
+    val computed = AssetRepo(proxy).getAsset("Broke.jpg")
 
     println(s"==== blocks are = ${computed}")
     computed.toOption.isDefined === true
