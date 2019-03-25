@@ -30,6 +30,8 @@ case class User(id: String,
   metadata: Map[String, String]
 ) extends Domain
 
+case class Server(hostName: String, port: Int)
+
 case class Artwork(id: String, uri: String) extends Domain
 
 case class Artist(
@@ -95,8 +97,7 @@ object NameKey extends Enumeration {
   play = Value
 }
 
-
-case class CachedRSongUser(
+case class CachedUser(
   rsongUserId: String,
   playCount: PlayCount,
   isSyncWithRChain: Boolean = false,
@@ -105,19 +106,8 @@ case class CachedRSongUser(
 
 case class CachedAsset(
   name: String,
-  binaryData: Array[Byte],
+  data: Array[Byte],
   isSyncWithRChain: Boolean = false,
   rChainName: Option[String] = None
 ) extends Domain
 
-object ImmersionNames {
-  val contractNames = Map(
-    NameKey.newUserId -> """@["Immersion", "newUserId"]""",
-    NameKey.store -> """@["Immersion", "store"]""",
-    NameKey.playCount -> """@["Immersion", "playCount"]""",
-    NameKey.retrieveSong -> """@["Immersion", "retrieveSong"]""",
-    NameKey.retrieveMetadata -> """@["Immersion", "retrieveMetadata"]""",
-    NameKey.remunerate -> """@["Immersion", "remunerate"]""",
-    NameKey.play -> """@["Immersion", "play"]"""
-  )
-}

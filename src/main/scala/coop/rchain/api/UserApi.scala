@@ -11,15 +11,13 @@ import io.circe.generic.auto._
 import io.circe.syntax._
 import kamon.Kamon
 
-class UserApi[F[_]: Sync] extends Http4sDsl[F] {
-  import RSongUserCache._
-
+class UserApi[F[_]: Sync](repo: UserCache) extends Http4sDsl[F] {
 
   val log = Logger("UserApi")
   val routes: HttpRoutes[F] = HttpRoutes.of[F] {
 
     case GET -> Root / userId =>
-      getOrCreateUser(userId).fold(
+      repo.getOrCreateUser(userId).fold(
         l => {
           computeHttpErr(l, userId, s"user")
         },
@@ -34,7 +32,7 @@ class UserApi[F[_]: Sync] extends Http4sDsl[F] {
                 metadata = Map("immersionUser" -> "ImmersionUser")).asJson)
           })
     case GET -> Root / id / "playcount" =>
-        getOrCreateUser(id)
+        repo.getOrCreateUser(id)
         .fold(
           e =>
             computeHttpErr(e, id, s"get /user/playcount"),

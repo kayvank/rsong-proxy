@@ -9,25 +9,29 @@ import java.util.UUID
 
 import coop.rchain.utils.HexUtil
 
+trait SongRepo {
+  def getAsset(assetName: String): Either[Err, Array[Byte]]
+}
+
 object SongRepo {
-  private val SONG_OUT = "SONG-OUT" // UUID.randomUUID.toString
+  def apply(repo: Repo) = new SongRepo {
+    val log = Logger[SongRepo]
+    private val _TAG_ = "_TAG_" //
 
-  import Repo._
+    def getAsset(assetName: String): Either[Err, Array[Byte]] =
+      for {
+        songId <- repo.findByName(assetName)
+        songIdOut = s"${songId}${_TAG_}"
+        termToRetrieveSong =
+        s"""@["Immersion", "retrieveSong"] ! ("$songId".hexToBytes(), "$songIdOut")"""
+        d <- repo.deployAndPropose(termToRetrieveSong)
+        _ = log.info(s" deploy propose results = ${d}")
+        songData <- repo.findByName(songIdOut)
+        binarySongData <- HexUtil.hex2bytes(songData)
+      } yield binarySongData
 
-  val log = Logger[SongRepo.type ]
-
-  val getRSongAsset: String =>  Either[Err, Array[Byte]] =
-      assetName =>
-    for {
-      songId <- findByName(assetName)
-      songIdOut = s"${songId}-${SONG_OUT}"
-      _ = log.info(s"${songId}-${SONG_OUT}")
-      retrieveSongArgs = s"""("$songId".hexToBytes(), "$songIdOut")"""
-      termToRetrieveSong = s"""@["Immersion", "retrieveSong"]!$retrieveSongArgs"""
-      _ = log.info(s"rholang to retrieve:${termToRetrieveSong}")
-      _ <- deployAndPropose(termToRetrieveSong)
-      songData <- findByName(songIdOut)
-      binarySongData <- HexUtil.hex2bytes(songData)
-    } yield binarySongData
+  }
 
 }
+
+

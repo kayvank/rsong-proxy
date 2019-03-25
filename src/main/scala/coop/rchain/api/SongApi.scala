@@ -4,7 +4,8 @@ import cats.effect._
 import com.typesafe.scalalogging.Logger
 import org.http4s.circe._
 import coop.rchain.protocol.Protocol._
-import coop.rchain.repo._
+import coop.rchain.repo.{AssetCache, UserCache}
+//import coop.rchain.repo._
 import org.http4s._
 import org.http4s.dsl.Http4sDsl
 import io.circe.generic.auto._
@@ -12,12 +13,10 @@ import io.circe.syntax._
 import coop.rchain.domain._
 import coop.rchain.service.moc.MocSongMetadata
 import coop.rchain.service.moc.MocSongMetadata.mocSongs
-import coop.rchain.repo.RSongAssetCache._
-import coop.rchain.repo.RSongUserCache.{decPlayCount, viewPlayCount}
 import kamon.Kamon
 
 
-class SongApi[F[_] : Sync] extends Http4sDsl[F] {
+class SongApi[F[_] : Sync](songRepo: AssetCache, userRepo: UserCache) extends Http4sDsl[F] {
 
   object perPage extends OptionalQueryParamDecoderMatcher[Int]("per_page")
 
@@ -43,26 +42,26 @@ class SongApi[F[_] : Sync] extends Http4sDsl[F] {
 
       case GET -> Root / "song" / "music" / id =>
         Kamon.counter(s"200 - get /song/music/$id").increment()
-        getMemoizedAsset(id).fold(
+        songRepo.getMemoized(id).fold(
           l => {
             computeHttpErr(l, id, s"get /song/music/$id")
           },
           r => {
             Kamon.counter(s"200 - get /song/music/$id").increment()
-            Ok(r.binaryData,
+            Ok(r.data,
               Header("Content-Type", "binary/octet-stream"),
               Header("Accept-Ranges", "bytes"))
           }
         )
 
       case GET -> Root / "art" / id ⇒
-        getMemoizedAsset(id).fold(
+        songRepo.getMemoized(id).fold(
           l => {
             computeHttpErr(l, id, s"get /art/$id")
           },
           r => {
             Kamon.counter(s"200 - /art/$id").increment()
-            Ok(r.binaryData,
+            Ok(r.data,
               Header("Content-Type", "binary/octet-stream"),
               Header("Accept-Ranges", "bytes"))
           }
@@ -92,8 +91,8 @@ class SongApi[F[_] : Sync] extends Http4sDsl[F] {
 
   val view: String => String => Either[Err, PlayCount] =
     songId => userId => for {
-      v <- viewPlayCount(userId)
-      _ <- decPlayCount(songId, userId)
+      v <- userRepo.viewPlayCount(userId)
+      _ <- userRepo.decPlayCount(songId, userId)
     } yield v
 
   private def getSongMetadata(songId: String, userId: String): Either[Err, SongResponse] = {

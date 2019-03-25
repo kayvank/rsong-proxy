@@ -1,32 +1,26 @@
 package coop.rchain.repo
 
 import com.typesafe.scalalogging.Logger
-import coop.rchain.models.Par
 import coop.rchain.domain._
-import coop.rchain.utils.Globals._
+
+trait Repo {
+  def deployAndPropose(query: String): Either[Err, DeployAndProposeResponse]
+
+  def findByName(name: String): Either[Err, String]
+}
 
 object Repo {
 
-  val log = Logger("Repo")
-  val (host, port) = (appCfg.getString("grpc.host"),
-    appCfg.getInt("grpc.ports.external"))
+  def apply(proxy: RNodeProxy): Repo = new Repo {
+    val log = Logger("Repo")
 
-  val proxy = RholangProxy(host, port)
-  println(s""""
-              ----------------------------------------------------
-             GRPC server:   $host:$port
-             rsongHostUrl:  $rsongHostUrl"
-             redis_url:     ${appCfg.getString("redis.url")}
-              ----------------------------------------------------
-  """)
+    def deployAndPropose(query: String): Either[Err, DeployAndProposeResponse] =
+      proxy.deployAndPropose(query)
 
- def deployAndPropose(queryTerm:String):Either[Err, DeployAndProposeResponse] =
-   proxy.deployAndPropose(queryTerm)
+    def findByName(name: String): Either[Err, String] = findByName(proxy, name)
 
-  def findByName( name: String): Either[Err, String] =  findByName(proxy, name)
+    private def findByName(proxy: RNodeProxy, name: String): Either[Err, String] =
+      proxy.dataAtName( s""""$name"""")
 
-  private  def findByName(proxy: RholangProxy, name: String): Either[Err, String] =
-    proxy.dataAtName( s""""$name"""")
-
-
+  }
 }

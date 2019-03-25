@@ -3,7 +3,6 @@ package coop.rchain.repo
 import coop.rchain.casper.protocol._
 import coop.rchain.domain.{Err, OpCode}
 import com.google.protobuf.empty._
-import coop.rchain.models.{Expr, Par}
 import io.grpc.{ManagedChannel, ManagedChannelBuilder}
 import coop.rchain.domain._
 import com.typesafe.scalalogging.Logger
@@ -11,23 +10,23 @@ import coop.rchain.domain.OpCode.OpCode
 import coop.rchain.either.{Either => CE}
 import coop.rchain.protocol.ParUtil._
 import coop.rchain.models.either.EitherHelper._
-import coop.rchain.rholang.interpreter.{Interpreter, PrettyPrinter}
+import coop.rchain.rholang.interpreter.{PrettyPrinter}
 
 import scala.util._
 
-object RholangProxy {
+object RNodeProxy {
 
 
   val MAXGRPCSIZE = 1024 * 1024 * 1024 *5// 10G for a song+metadat
 
-  def apply(host: String, port: Int): RholangProxy = {
+  def apply(rnode: Server): RNodeProxy = {
 
     val channel =
       ManagedChannelBuilder
-        .forAddress(host, port)
+        .forAddress(rnode.hostName, rnode.port)
         .maxInboundMessageSize(MAXGRPCSIZE)
         .usePlaintext.build
-    new RholangProxy(channel)
+    new RNodeProxy(channel)
   }
 
   implicit class EitherOps(val resp: coop.rchain.either.Either)  {
@@ -46,12 +45,12 @@ object RholangProxy {
 
 }
 
-class RholangProxy(channel: ManagedChannel) {
+class RNodeProxy(channel: ManagedChannel) {
 
-import RholangProxy._
+import RNodeProxy._
 
   private lazy val grpc = DeployServiceGrpc.blockingStub(channel)
-  private lazy val log = Logger[RholangProxy]
+  private lazy val log = Logger[RNodeProxy]
 
   def shutdown = channel.shutdownNow()
 
@@ -89,7 +88,7 @@ import RholangProxy._
     name.asPar.flatMap( par =>{
       log.info(s"dataAtName received par ${par}")
       val res: CE = grpc.listenForDataAtName(DataAtNameQuery(Int.MaxValue, Some(par)))
-      toEither[ListeningNameDataResponse](res) match {
+      toEither[ListeningNameDataResponse](res)  match {
         case e if e.isRight =>
            val r =  for {
               x <-  e.right.get.blockResults
