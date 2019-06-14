@@ -1,5 +1,7 @@
 ![GitHub Logo](docs/image/rsong-proxy.jpeg)
 
+## this repo is deprecated in favor of [rsong](https://github.com/rchain/rsong)
+
 # RSong Proxy
 
 A client facing REST layer to proxy RSong requests to RSongs Rholang contracts.
